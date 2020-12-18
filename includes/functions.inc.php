@@ -90,7 +90,7 @@ function createUser($conn, $name, $email, $username, $pwd)
 
     // run this sql statement inside the database and checks for an error
     if (!mysqli_stmt_prepare($stmt, $sql)) {
-        header("location: ../signup.php?error=datafailed");
+        header("location: ../signup.php?error=stmtfailed");
         exit();
     }
 
