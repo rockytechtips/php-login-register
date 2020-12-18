@@ -2,7 +2,7 @@
 
 function emptyInputSignup($name, $email, $username, $pwd, $pwdRepeat)
 {
-    $result = '';
+    $result = false;
     // if any input field is empty then return true 
     if (empty($name) || empty($email) || empty($username) || empty($pwd) || empty($pwdRepeat)) {
         $result = true;
@@ -14,7 +14,7 @@ function emptyInputSignup($name, $email, $username, $pwd, $pwdRepeat)
 
 function invalidUid($username)
 {
-    $result = '';
+    $result = false;
     //if there's a mistake in password then return true
     if (!preg_match("/^[a-zA-Z0-9]*$/", $username)) {
         $result = true;
@@ -26,7 +26,7 @@ function invalidUid($username)
 
 function invalidEmail($email)
 {
-    $result = '';
+    $result = false;
     // if it is not a proper email then return true 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $result = true;
@@ -38,7 +38,7 @@ function invalidEmail($email)
 
 function pwdMatch($pwd, $pwdRepeat)
 {
-    $result = '';
+    $result = false;
     // if password does not match then return true 
     if ($pwd !== $pwdRepeat) {
         $result = true;
@@ -48,7 +48,7 @@ function pwdMatch($pwd, $pwdRepeat)
     return $result;
 }
 
-function uidExist($conn, $username, $email)
+function uidExists($conn, $username, $email)
 {
     // "?" is a placeholder
     $sql = "SELECT * FROM users WHERE usersUid = ? OR usersEmail = ?;";
@@ -103,4 +103,45 @@ function createUser($conn, $name, $email, $username, $pwd)
     mysqli_stmt_close($stmt);
     header("location: ../signup.php?error=none");
     exit();
+}
+
+function emptyInputLogin($username, $pwd)
+{
+    $result = false;
+    // if any input field is empty then return true 
+    if (empty($username) || empty($pwd)) {
+        $result = true;
+    } else {
+        $result = false;
+    }
+    return $result;
+}
+
+function loginUser($conn, $username, $pwd)
+{
+    $uidExists = uidExists($conn, $username, $username);
+
+    // if username/email is false then displays error
+    if ($uidExists === false) {
+        header("location: ../login.php?error=wronglogin");
+        exit();
+    }
+
+    $pwdHashed = $uidExists["usersPwd"];
+    //this checks if input password and db password are same then return true  
+    $checkPwd = password_verify($pwd, $pwdHashed);
+
+    //if password is false then display error
+    if ($checkPwd === false) {
+        header("location: ../login.php?error=wronglogin");
+        exit();
+    }     
+    //if password is true then redirect to homepage
+    else if ($checkPwd === true) {
+        session_start();
+        $_SESSION["userid"] = $uidExists["usersId"];
+        $_SESSION["useruid"] = $uidExists["usersUid"];
+        header("location: ../index.php");
+        exit();
+    }
 }

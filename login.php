@@ -15,14 +15,23 @@
             <form action="includes/login.inc.php" method="POST">
                 <div class="form-group">
                     <label for="name">Username/Email</label>
-                    <input name="name" type="text" class="form-control" id="name">
+                    <input name="uid" type="text" class="form-control" id="name">
                 </div>
                 <div class="form-group">
                     <label for="pwd">Password</label>
                     <input name="pwd" type="password" class="form-control" id="pwd">
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" name="submit" class="btn btn-primary">Login</button>
             </form>
+            <?php
+            if (isset($_GET["error"])) {
+                if (($_GET["error"]) == "emptyinput") {
+                    echo "Fill in all the fields";
+                } elseif (($_GET["error"]) == "wronglogin") {
+                    echo "Incorrect Login information!";
+                }
+            }
+            ?>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
