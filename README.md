@@ -2,6 +2,9 @@
 I have created Basic PHP Login System with Profile Page For Beginners
 
 [Site Demo](https://tinny-armories.000webhostapp.com/)
+#### USER LOGIN
+##### username: `demouser`
+##### password: `123456`
 
 ### SETUP DATABASE
 #### Database: `loginsystem`
